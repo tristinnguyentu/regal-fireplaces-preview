@@ -1,0 +1,807 @@
+/* Regal Fireplaces: the dining-room-after-dark look. Coal grounds, linen type, one brass action colour.
+   Colours, fonts and the button's type and padding come from theme.json; this file handles layout and components.
+   Each component is defined once, in its own section below. Pages and sections only place components; they do not
+   restyle them. */
+/* Until the web fonts arrive, text sets in Arial and Georgia scaled to each web font's width, ascent and descent,
+   so the swap moves no lines. The numbers are measured in Chrome over English body copy. */
+@font-face { font-family: "Hanken Grotesk Fallback"; src: local("Arial"), local("ArialMT"); font-weight: 100 600; size-adjust: 100.96%; ascent-override: 99.05%; descent-override: 29.72%; line-gap-override: 0%; }
+@font-face { font-family: "Hanken Grotesk Fallback"; src: local("Arial Bold"), local("Arial-BoldMT"); font-weight: 700 900; size-adjust: 95.62%; ascent-override: 104.59%; descent-override: 31.38%; line-gap-override: 0%; }
+@font-face { font-family: "DM Serif Display Fallback"; src: local("Georgia"); font-style: normal; size-adjust: 99.28%; ascent-override: 104.75%; descent-override: 34.25%; line-gap-override: 0%; }
+@font-face { font-family: "DM Serif Display Fallback"; src: local("Georgia Italic"), local("Georgia-Italic"); font-style: italic; size-adjust: 94.1%; ascent-override: 110.52%; descent-override: 36.13%; line-gap-override: 0%; }
+:root {
+  --coal: var(--wp--preset--color--coal);
+  --hearth: var(--wp--preset--color--hearth);
+  --smoke: var(--wp--preset--color--smoke);
+  --ash: var(--wp--preset--color--ash);
+  --linen: var(--wp--preset--color--linen);
+  --brass: var(--wp--preset--color--brass);
+  --brass-light: var(--wp--preset--color--brass-light);
+  --display: var(--wp--preset--font-family--display);
+  --body: var(--wp--preset--font-family--body);
+  --edge: #6e6556;
+  --ease: cubic-bezier(.2, .7, .2, 1);
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  --dur-1: 150ms;
+  --dur-2: 240ms;
+  --dur-3: 600ms;
+  --rise: 14px;
+  --hh: 64px;
+  color-scheme: dark;
+}
+@media (min-width: 960px) { :root { --hh: 80px; } }
+
+/* ---------- Base ---------- */
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-padding-top: calc(var(--hh) + 16px); }
+body { margin: 0; -webkit-font-smoothing: antialiased; padding-bottom: 76px; }
+@media (min-width: 960px) { body { padding-bottom: 0; } }
+body:has(dialog[open]) { overflow: hidden; }
+img { max-width: 100%; height: auto; }
+a { text-underline-offset: 4px; text-decoration-color: rgba(242, 237, 228, .4); }
+button, input, select, textarea { font: inherit; }
+button { cursor: pointer; }
+button:disabled { opacity: .65; cursor: wait; }
+h1, h2, h3 { text-wrap: balance; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--brass-light); outline-offset: 3px; }
+.stars { color: var(--brass); letter-spacing: .12em; }
+.skip-link { position: fixed; top: -150px; left: 1rem; z-index: 200; background: var(--brass); color: var(--coal); padding: 1rem; }
+.skip-link:focus { top: 1rem; }
+.screen-reader-text { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after, ::backdrop { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}
+
+/* ---------- WordPress block wrappers (the block library stylesheet is not loaded) ---------- */
+:where(.wp-site-blocks) > * { margin-block-start: 0; }
+.wp-site-blocks { padding: 0; }
+.site-main { margin: 0 !important; }
+.home .site-main { margin-top: calc(-1 * var(--hh)) !important; }
+.site-main > .wp-block-post-content { max-width: none; margin: 0; }
+.site-main > .entry-content > * { margin-block-start: 0; }
+.wp-block-columns { display: flex; }
+.wp-block-column { flex: 1; min-width: 0; }
+.wp-block-buttons { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.wp-block-media-text { display: grid; align-items: center; }
+.wp-block-media-text__media { margin: 0; align-self: stretch; }
+.wp-block-media-text__media img { width: 100%; display: block; }
+.wp-block-media-text__content { min-width: 0; }
+.wp-block-cover { overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center; }
+.wp-block-cover__image-background, .wp-block-cover__background { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.wp-block-cover__image-background { z-index: 0; }
+.wp-block-cover__background { z-index: 1; }
+.wp-block-cover__inner-container { width: 100%; }
+@media (max-width: 781px) { .wp-block-columns { flex-direction: column; } }
+
+/* ---------- Page frame ---------- */
+.section, .band-wrap, .page-head, .catalog-wrap, .work { padding-inline: max(16px, 4vw); }
+.section > *, .band-wrap > *, .page-head > *, .catalog-wrap > *, .work > * { max-width: 1320px; margin-inline: auto; }
+.section { padding-top: var(--wp--preset--spacing--60); padding-bottom: var(--wp--preset--spacing--50); }
+.section h2 { margin: 0 0 1.5rem; }
+.section .section-lede { color: #d6cfc2; max-width: 52ch; margin: -.75rem 0 1.75rem; }
+.reading { max-width: 760px !important; margin-inline: auto; }
+
+:where(.wp-element-button, .wp-block-button__link, .lang-switch a, .chip, .specs-link, .clear-filters, .close-button, .menu-toggle, .header-phone, .mobile-phone, .nav-links a, .nav-links summary, .service-cols h3 a, .site-footer a, .footer-social a, .crumbs a, .spec-more summary) { transition: none var(--dur-1) var(--ease); }
+
+/* ---------- Button ----------
+   One button for the whole site: WordPress's button markup (.wp-block-button > .wp-block-button__link), written by
+   regal_button(). theme.json sets its type, colours and padding. .is-style-outline is the second action; .is-compact
+   is the smaller size used in the header and on product cards. The phone action bar sets its buttons' height. */
+.wp-element-button, .wp-block-button__link {
+  display: inline-flex; align-items: center; justify-content: center; text-align: center; text-decoration: none; white-space: nowrap;
+  border: 0; cursor: pointer; transition-property: background-color, color, border-color, box-shadow, transform;
+}
+.wp-block-button.is-compact > .wp-block-button__link { padding: .8rem 1.3rem; font-size: .9375rem; }
+.wp-block-button.is-style-outline > .wp-block-button__link {
+  background: transparent; color: var(--linen); border: 1px solid rgba(242, 237, 228, .55); padding: calc(.95rem - 1px) calc(1.6rem - 1px);
+}
+.wp-block-button.is-style-outline.is-compact > .wp-block-button__link { padding: calc(.8rem - 1px) calc(1.3rem - 1px); }
+.wp-block-button__link:is(:hover, :focus-visible) { background-color: var(--brass-light); box-shadow: 0 8px 22px -12px rgba(224, 191, 114, .55); }
+.wp-block-button.is-style-outline > .wp-block-button__link:is(:hover, :focus-visible) { border-color: var(--brass-light); color: var(--brass-light); background: transparent; box-shadow: none; }
+.wp-block-button__link:active { transform: translateY(0) scale(.98); transition-duration: 60ms; }
+
+/* ---------- Pill: the EN / ES switch ----------
+   It sits in its own dark pill, so it reads over any photo. Each option keeps a 44 px tap target through an
+   invisible hit area above and below it, so the pill keeps its shape. */
+.lang-switch {
+  display: flex; gap: 2px; width: max-content; margin: 0; padding: 3px; border-radius: 999px; font-size: .8125rem; font-weight: 700; letter-spacing: .08em;
+  background: rgba(12, 11, 10, .72); border: 1px solid rgba(242, 237, 228, .3); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+}
+.lang-switch a { position: relative; text-decoration: none; color: var(--linen); padding: 7px 13px; border-radius: 999px; line-height: 1.2; text-align: center; }
+.lang-switch a::after { content: ""; position: absolute; left: 0; right: 0; top: calc(50% - 22px); bottom: calc(50% - 22px); }
+.lang-switch a[aria-current] { background: var(--linen); color: var(--coal); }
+
+/* ---------- Chip: filter choices ----------
+   Product filters (buttons) and the work page's service filter (links) share it. A chosen multi-select chip leads with a
+   tick and every option chip ends with its count; an option with no cards is dimmed. */
+.chip {
+  flex: none; display: inline-flex; align-items: center; justify-content: center; min-width: 56px; min-height: 44px; padding: 0 18px; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--edge); background: transparent; color: var(--linen); font: 600 .9375rem/1.2 var(--body); text-decoration: none; white-space: nowrap;
+}
+.chip { transition-property: background-color, color, border-color, transform; }
+.chip:is(:hover, :focus-visible) { border-color: var(--ash); }
+.chip:not([aria-disabled="true"]):active { transform: scale(.96); }
+.chip[aria-pressed="true"], .chip[aria-checked="true"], .chip[aria-current] { background: var(--linen); border-color: var(--linen); color: var(--coal); }
+/* A maker logo is one colour in the text colour (a mask), or the full-colour image for a badge such as Napoleon's. */
+.maker-logo { --logo-h: 20px; display: block; flex: none; height: calc(var(--logo-h) * var(--s, 1)); aspect-ratio: var(--ratio); max-width: 120px; }
+span.maker-logo { background: currentColor; -webkit-mask: var(--logo) left center / contain no-repeat; mask: var(--logo) left center / contain no-repeat; }
+img.maker-logo { width: auto; object-fit: contain; object-position: left center; }
+.chip-tick { display: none; margin-right: 6px; font-size: .875rem; font-weight: 700; }
+.chip[aria-pressed="true"] .chip-tick { display: inline; }
+.chip-count { margin-left: 6px; color: var(--ash); font-weight: 500; }
+.chip[aria-pressed="true"] .chip-count { color: var(--coal); opacity: .72; }
+.chip[aria-disabled="true"] { opacity: .45; cursor: default; }
+.chip[aria-disabled="true"]:is(:hover, :focus-visible) { border-color: var(--edge); }
+.catalog[data-motion] .chip { transition: opacity var(--dur-2) var(--ease-out), background-color var(--dur-1) var(--ease), color var(--dur-1) var(--ease), border-color var(--dur-1) var(--ease), transform var(--dur-1) var(--ease); }
+@starting-style { .catalog[data-motion] .chip:not([hidden]) { opacity: 0; } }
+
+/* ---------- Tag: venting on product cards ---------- */
+.tag { display: inline-block; font-size: .8125rem; font-weight: 700; letter-spacing: .04em; padding: 2px 9px; border: 1px solid transparent; border-radius: 999px; }
+.tag-vented { background: var(--smoke); border-color: var(--smoke); color: var(--linen); }
+.tag-ventfree { border-color: rgba(224, 191, 114, .6); color: var(--brass-light); }
+
+/* ---------- Text button and text link ---------- */
+.clear-filters, .clear-search, .change-category { min-height: 44px; border: 0; padding: 0; background: none; color: var(--brass-light); font: 600 .9375rem var(--body); cursor: pointer; }
+.specs-link { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; font-size: .9375rem; color: var(--linen); text-underline-offset: 4px; text-decoration-color: rgba(242, 237, 228, .4); }
+.lang-switch a, .header-phone, .mobile-phone, .nav-links a, .nav-links summary, .service-cols h3 a { transition-property: color; }
+.specs-link, .clear-filters, .site-footer a, .crumbs a, .spec-more summary { transition-property: color, text-decoration-color; }
+:is(.specs-link, .clear-filters):is(:hover, :focus-visible), :is(.site-footer a, .crumbs a, .spec-more summary):is(:hover, :focus-visible) { color: var(--brass-light); text-decoration-color: var(--brass-light); }
+
+/* ---------- Icon buttons ---------- */
+.close-button { width: 44px; height: 44px; flex: none; border-radius: 50%; border: 1px solid var(--smoke); background: transparent; color: var(--linen); font-size: 1.5rem; line-height: 1; cursor: pointer; }
+.close-button { transition-property: border-color, color, transform; }
+.close-button:is(:hover, :focus-visible) { border-color: var(--brass-light); color: var(--brass-light); }
+.close-button:active { transform: scale(.94); }
+.menu-toggle { place-items: center; width: 46px; height: 46px; padding: 0; border: 0; background: none; color: var(--linen); }
+.menu-toggle:active { transform: scale(.92); }
+.menu-label { display: none; }
+/* Custom press feedback. */
+.wp-block-button__link, .chip, .close-button, .menu-toggle { -webkit-tap-highlight-color: transparent; }
+.header-phone, .mobile-phone { display: inline-flex; align-items: center; justify-content: center; flex: none; min-width: 44px; min-height: 44px; gap: 8px; color: var(--linen); text-decoration: none; }
+.header-phone { font: 500 16px/1.2 var(--body); white-space: nowrap; }
+.header-phone svg, .mobile-phone svg { flex: none; }
+.header-phone-number { display: none; }
+@media (min-width: 1280px) { .header-phone-number { display: inline; } }
+
+/* ---------- Header ---------- */
+.site-header {
+  position: sticky; top: 0; z-index: 50; height: var(--hh);
+  border-bottom: 1px solid transparent; isolation: isolate;
+}
+.site-header::before { content: ""; position: absolute; inset: 0 0 -1px; z-index: -1; pointer-events: none; background: rgba(12, 11, 10, .96); border-bottom: 1px solid rgba(201, 162, 78, .18); }
+.home .site-header::before { transition: opacity var(--dur-2) var(--ease); }
+.home .site-header:not(.is-scrolled)::before { opacity: 0; }
+@media (max-width: 959px) {
+  .home .site-header::after { content: ""; position: absolute; inset: 0 0 -1px; z-index: -1; pointer-events: none; background: linear-gradient(rgba(12, 11, 10, .75), rgba(12, 11, 10, 0)); opacity: 0; transition: opacity var(--dur-2) var(--ease); }
+  .home .site-header:not(.is-scrolled)::after { opacity: 1; }
+}
+.header-row { max-width: 1440px; height: var(--hh); margin: auto; padding-inline: max(16px, 4vw); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.site-logo { display: block; flex: none; }
+.site-logo img { display: block; width: 132px; height: auto; filter: invert(1); }
+.desktop-nav { display: none; }
+.header-actions { display: none; align-items: center; gap: 20px; }
+.mobile-actions { display: flex; align-items: center; gap: 2px; margin-left: auto; }
+.nav-links { display: flex; align-items: center; gap: 16px; font-size: 16px; font-weight: 500; }
+.nav-links a, .nav-links summary { display: flex; align-items: center; min-height: 44px; text-decoration: none; white-space: nowrap; }
+.lang-switch a:not([aria-current]):is(:hover, :focus-visible),
+.menu-toggle:is(:hover, :focus-visible),
+:is(.header-phone, .mobile-phone):is(:hover, :focus-visible),
+.nav-links :is(a, summary):is(:hover, :focus-visible),
+.service-cols > .wp-block-column:is(:hover, :focus-within) h3 a { color: var(--brass-light); }
+.nav-links summary:focus-visible { outline: 2px solid var(--brass-light); outline-offset: 3px; }
+.desktop-nav :is(a, summary) { position: relative; }
+.desktop-nav :is(a, summary)::after { content: ""; position: absolute; left: var(--nav-inset, 10px); right: var(--nav-inset, 10px); bottom: calc(50% - .5em - 8px); height: 2px; background: var(--brass-light); transform: scaleX(0); transform-origin: left; transition: transform var(--dur-2) var(--ease); }
+.desktop-nav :is(a, summary):is(:hover, :focus-visible, [aria-current])::after { transform: scaleX(1); }
+/* The phone menu, the footer and the no-JavaScript menu underline the current page in the text itself. */
+:is(.mobile-menu, .nojs-menu, .footer-links) .nav-links [aria-current], .footer-list [aria-current] { text-decoration: underline 2px var(--brass-light); text-underline-offset: 8px; }
+.desktop-nav .services-menu[open] > .submenu { animation: submenu-in var(--dur-2) var(--ease); }
+@keyframes submenu-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+.services-menu { position: relative; }
+.services-menu summary { cursor: pointer; list-style: none; }
+/* Services opens a panel, so in the header it carries a caret, which turns while the panel is open. */
+.services-menu summary .caret { flex: none; margin-left: 6px; transition: transform var(--dur-2) var(--ease); }
+.services-menu[open] summary .caret { transform: rotate(180deg); }
+.services-menu summary::-webkit-details-marker { display: none; }
+.submenu { position: absolute; top: 100%; left: 0; background: var(--hearth); border: 1px solid var(--smoke); padding: 12px; width: max-content; max-width: 90vw; }
+.submenu a { padding-inline: 10px; }
+@media (min-width: 960px) {
+  .site-header .site-logo img { width: 172px; }
+  /* The navigation sits centred between the logo and the actions, its links 20 px apart (28 px from 1200 px). */
+  .header-row { gap: 20px; }
+  .desktop-nav { display: block; }
+  .desktop-nav .nav-links { gap: 20px; }
+  .desktop-nav .nav-links > a, .desktop-nav .nav-links > details > summary { padding-inline: 0; --nav-inset: 0px; }
+  .header-actions { display: flex; gap: 20px; }
+  .mobile-actions { display: none; }
+  /* On computers the menu button names itself beside the icon. */
+  .menu-toggle { width: auto; grid-auto-flow: column; column-gap: 8px; padding-inline: 8px; font: 500 16px/1 var(--body); }
+  .menu-label { display: inline; }
+}
+@media (min-width: 1200px) { .desktop-nav .nav-links { gap: 28px; } }
+/* Laptop widths: a 132 px logo and 20 px side padding leave the links their spacing in both languages. */
+@media (min-width: 1100px) and (max-width: 1365px) { .header-row { padding-inline: 20px; } .site-header .site-logo img { width: 132px; } }
+/* Below 1100 px six links would crowd, in either language, so the menu button opens them and the row keeps the phone,
+   pill and quote button. */
+@media (min-width: 960px) and (max-width: 1099px) {
+  .desktop-nav { display: none; }
+  .header-actions { margin-left: auto; }
+  .mobile-actions { display: flex; margin-left: 0; }
+  .mobile-actions > :not(.menu-toggle), :root:not(.js) .menu-toggle { display: none; }
+  .js .menu-toggle { display: grid; }
+  .site-header .nojs-menu { display: block; }
+}
+/* The narrowest phones: a smaller logo, and below 360 px the call icon gives way, since Call stays in the bottom bar. */
+@media (max-width: 374px) { .header-row { gap: 8px; } .site-header .site-logo img { width: 112px; } }
+@media (max-width: 359px) { .mobile-actions .mobile-phone { display: none; } }
+
+/* Variant, not in use: smoked glass on every page and scroll position. */
+.site-header.header--glass,
+.home .site-header.header--glass:not(.is-scrolled) { background: rgba(12, 11, 10, .62); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(242, 237, 228, .12); }
+
+.site-header.header--glass::before, .site-header.header--glass::after { content: none; }
+
+/* Phone menu */
+.mobile-menu { background: var(--coal); color: var(--linen); border: 0; }
+.mobile-menu[open] { position: fixed; inset: 0; width: 100%; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 20px max(16px, 4vw); }
+.mobile-menu .close-button { float: right; }
+.mobile-menu .nav-links { display: flex; flex-direction: column; align-items: stretch; gap: 14px; padding-top: 64px; font: 400 2rem/1.2 var(--display); }
+.mobile-menu .submenu { position: static; display: grid; border: 0; padding: 0 0 0 1rem; font: 400 17px/1.6 var(--body); color: var(--ash); }
+.mobile-menu .submenu a { white-space: normal; padding-left: 0; }
+.mobile-menu .lang-switch { margin-block: 1.5rem; }
+dialog.mobile-menu:modal[open] :is(.nav-links > *, .lang-switch, .wp-block-button) { animation: menu-item-in var(--dur-3) var(--ease-out) both; animation-delay: calc(var(--menu-i, 0) * 30ms); }
+.mobile-menu .nav-links > :nth-child(2) { --menu-i: 1; }
+.mobile-menu .nav-links > :nth-child(3) { --menu-i: 2; }
+.mobile-menu .nav-links > :nth-child(4) { --menu-i: 3; }
+.mobile-menu .nav-links > :nth-child(5) { --menu-i: 4; }
+.mobile-menu .nav-links > :nth-child(6) { --menu-i: 5; }
+.mobile-menu .nav-links > :nth-child(n+7), .mobile-menu > .lang-switch { --menu-i: 6; }
+.mobile-menu > .wp-block-button { --menu-i: 7; }
+@keyframes menu-item-in { from { opacity: 0; transform: translateY(var(--rise)); } to { opacity: 1; transform: none; } }
+.nojs-menu { background: var(--coal); padding: 1rem; }
+.nojs-menu .nav-links { display: grid; }
+.nojs-menu .submenu { position: static; }
+@media (max-width: 959px) { .menu-toggle { display: none; } .js .menu-toggle { display: grid; } }
+@media (min-width: 960px) { .nojs-menu { display: none; } }
+
+/* Phone action bar: Call and Request a quote, both buttons at the bar's height. */
+.action-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; display: flex; gap: 10px;
+  padding: 10px max(16px, env(safe-area-inset-left, 0px)) calc(10px + env(safe-area-inset-bottom, 0px));
+  background: rgba(12, 11, 10, .97); border-top: 1px solid rgba(201, 162, 78, .25);
+}
+.action-bar > .wp-block-button { display: contents; }
+.action-bar .wp-block-button__link { flex: 1; min-width: max-content; min-height: 54px; padding-block: 0 !important; padding-inline: 12px !important; }
+.action-bar .action-call { flex: 0 0 34%; }
+.action-bar.has-full-call .action-call { flex-basis: auto; }
+@media (min-width: 960px) { .action-bar { display: none; } }
+/* While a form field on the page has focus, the phone keyboard needs the room. */
+@media (max-width: 959px) { body:has(.field :is(input, select, textarea):focus) .action-bar { display: none; } }
+
+/* ---------- Home: hero ---------- */
+.home-cover { margin: 0 !important; }
+.hero { padding-top: calc(var(--hh) + 40px) !important; padding-bottom: 150px !important; min-height: 78vh !important; }
+.hero::after { content: ""; position: absolute; inset: auto 0 0; height: 45%; background: linear-gradient(transparent, var(--coal)); pointer-events: none; }
+.hero.wp-block-cover { padding-left: max(16px, 4vw); padding-right: max(16px, 4vw); }
+.hero .wp-block-cover__inner-container { z-index: 2; max-width: 1320px; margin-inline: auto; }
+.hero-copy > * { max-width: 660px; }
+.hero .hero-copy > h1 { max-width: 12em; text-wrap: balance; }
+.hero h1 { font-size: clamp(2.375rem, 6.4vw, 5.25rem); line-height: 1.02; margin: 0; }
+.hero h1 em { color: var(--brass-light); }
+.hero-lede { font-size: clamp(1.0625rem, 1.6vw, 1.3rem); line-height: 1.5; text-wrap: pretty; color: #e2dccf; max-width: 34ch; margin-top: 1.25rem !important; }
+.hero .wp-block-buttons { margin-top: 2rem !important; gap: 12px; }
+.hero-rating { display: grid; grid-template-columns: auto auto; justify-content: start; align-items: center; column-gap: 18px; margin-top: 1.75rem !important; color: var(--linen); }
+.hero-rating .score { font: 400 clamp(3rem, 6vw, 3.75rem)/1 var(--display); color: var(--brass-light); }
+.hero-rating .rating-text { display: grid; gap: 6px; padding-left: 18px; border-left: 1px solid rgba(224, 191, 114, .45); font-size: 1.1875rem; font-weight: 600; line-height: 1.2; }
+.hero-rating .stars { font-size: 1.625rem; line-height: 1; letter-spacing: .06em; color: var(--brass-light); }
+.hero-rating strong { font-weight: 800; }
+/* The rating links to the Reviews page; its count turns brass on hover. */
+a.hero-rating { text-decoration: none; }
+.hero-rating .rating-text > span:nth-child(2) { transition: color var(--dur-1) var(--ease); }
+a.hero-rating:is(:hover, :focus-visible) .rating-text > span:nth-child(2) { color: var(--brass-light); }
+@media (min-width: 960px) {
+  .hero { min-height: min(88vh, 820px) !important; padding-bottom: 190px !important; }
+  .hero-rating { column-gap: 22px; }
+  .hero-rating .score { font-size: 4.5rem; }
+  .hero-rating .rating-text { padding-left: 22px; font-size: 1.375rem; }
+  .hero-rating .stars { font-size: 2rem; }
+}
+
+/* The photo is a dim room, so its exposure is raised until the stove and flames read clearly. Only the area behind
+   the words is darkened. On phones the words cover the full width, so the photo gets its own band above them. */
+.hero .wp-block-cover__image-background { filter: brightness(1.7) contrast(1.08); }
+.hero h1, .hero p { text-shadow: 0 1px 14px rgba(0, 0, 0, .55); }
+@media (max-width: 959px) {
+  .hero { --band: calc(var(--hh) + 250px); padding-top: var(--band) !important; min-height: 0 !important; }
+  .hero .wp-block-cover__image-background { height: var(--band) !important; bottom: auto !important; object-position: 74% 72% !important; }
+  .hero .wp-block-cover__background {
+    opacity: 1 !important;
+    background: linear-gradient(180deg, rgba(12, 11, 10, .55) 0, rgba(12, 11, 10, 0) calc(var(--hh) + 30px), rgba(12, 11, 10, 0) calc(var(--band) - 90px), var(--coal) var(--band)) !important;
+  }
+  .hero::after { height: 20%; }
+}
+@media (min-width: 960px) {
+  /* One shade, shaped as a soft curve: dark down the left behind the words and along the top behind the nav,
+     clear around the stove. The header adds no fade of its own over it. */
+  .hero .wp-block-cover__background {
+    opacity: 1 !important;
+    background: radial-gradient(ellipse 78.5% 113% at 100% 100%, rgba(12, 11, 10, 0) 0, rgba(12, 11, 10, 0) 74%, rgba(12, 11, 10, .5) 88%, rgba(12, 11, 10, .88) 100%) !important;
+  }
+  .hero::after { height: 22%; }
+}
+/* Variant, not in use: on computers the photo fills the right 64% and fades into coal behind the words. */
+@media (min-width: 960px) {
+  .hero.hero--fade .wp-block-cover__image-background { left: auto !important; right: 0; width: 64% !important; }
+  .hero.hero--fade .wp-block-cover__background {
+    background: linear-gradient(90deg, var(--coal) 0%, var(--coal) 37%, rgba(12, 11, 10, .6) 50%, rgba(12, 11, 10, 0) 64%),
+                linear-gradient(180deg, rgba(12, 11, 10, .5) 0, rgba(12, 11, 10, 0) 170px) !important;
+    opacity: 1 !important;
+  }
+}
+@media (max-width: 599px) {
+  .hero .wp-block-buttons { flex-direction: column; align-items: stretch; }
+  .hero .wp-block-button__link { width: 100%; }
+}
+
+/* ---------- Photo strip ----------
+   The home page's recent work rises into the hero so his jobs sit in the first screen. Service and about pages use
+   the same strip without captions. On phones it scrolls sideways. */
+.work { position: relative; z-index: 3; margin-top: -120px !important; }
+.job-strip { display: flex; gap: 10px; flex-wrap: nowrap; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding-inline: max(16px, 4vw); }
+.job-strip::-webkit-scrollbar { display: none; }
+.job-strip > .wp-block-image { position: relative; overflow: hidden; flex: 0 0 74%; width: 74%; scroll-snap-align: start; aspect-ratio: 4 / 5; margin: 0; }
+.job-strip .wp-block-image img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 2px; }
+.job-strip .wp-block-image figcaption.wp-element-caption {
+  position: absolute; bottom: 0; left: 0; right: 0; margin: 0;
+  font-size: .9375rem; font-weight: 600; text-align: left; padding: 40px 14px 12px; max-height: none;
+  background: linear-gradient(transparent, rgba(0, 0, 0, .78)); border-radius: 0 0 2px 2px;
+}
+/* One line under the strip links to more installs on Instagram, 44 px tall. */
+.work-social { margin: .75rem 0 0; }
+.work-social a { display: inline-flex; align-items: center; gap: .5rem; min-height: 44px; text-decoration: none; }
+.work-social strong { font-weight: 600; color: var(--brass-light); }
+@media (min-width: 960px) {
+  .work { margin-top: -170px !important; }
+  .job-strip { overflow: visible; padding-inline: 0; gap: 14px; }
+  .job-strip > .wp-block-image { flex: 1 1 0; width: auto; }
+}
+
+/* ---------- Services ---------- */
+/* Each service page ends with the other four, one row of links with 44 px targets. */
+.other-services-list { display: flex; flex-wrap: wrap; gap: 0 28px; margin: 0; padding: 0; list-style: none; }
+.other-services-list a { display: inline-flex; align-items: center; min-height: 44px; }
+.services { padding-block: var(--wp--preset--spacing--60) var(--wp--preset--spacing--50) !important; }
+.service-cols { gap: 0 !important; margin-top: 2.5rem !important; }
+.service-cols > * { margin-block: 0; min-width: 0; }
+.service-cols > .wp-block-column { border-top: 1px solid rgba(201, 162, 78, .45); padding: 1.4rem 0 1.6rem; }
+.service-cols h3 { font-size: 1.6rem; margin: 0; }
+.service-cols h3 a { text-decoration: none; }
+.service-cols > .wp-block-column:has(a) { position: relative; }
+.service-cols > .wp-block-column:has(a)::before { content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 1px; background: var(--brass-light); transform: scaleX(0); transform-origin: left; transition: transform var(--dur-3) var(--ease); }
+.service-cols > .wp-block-column:focus-within::before { transform: scaleX(1); }
+.service-cols p { color: var(--ash); margin-top: .6rem; font-size: 1rem; }
+.towns { color: var(--ash); font-size: 1rem; border-top: 1px solid var(--smoke); padding-top: 1.25rem; margin-top: 1rem !important; }
+.towns strong { color: var(--linen); font-weight: 600; }
+@media (min-width: 782px) {
+  .service-cols { gap: 32px !important; }
+}
+.steps .num { display: block; font: 400 2rem/1 var(--display); color: var(--brass-light); margin-bottom: .6rem; }
+.steps h3 { margin-top: 0; }
+
+/* ---------- Band (media & text) ----------
+   The photo's share of the width is set on each band (grid-template-columns), as the WordPress block does. */
+.band.wp-block-media-text { background: var(--hearth); margin-block: var(--wp--preset--spacing--40) !important; border: 1px solid var(--smoke); }
+.band .wp-block-media-text__media { overflow: hidden; }
+.band .wp-block-media-text__media img { aspect-ratio: 16 / 10; object-fit: cover; }
+.band .wp-block-media-text__content { padding: 2rem 1.25rem 2.25rem !important; }
+.band h2 { margin: 0; }
+.band p { color: var(--ash); max-width: 46ch; }
+@media (max-width: 600px) { .band.wp-block-media-text.is-stacked-on-mobile { grid-template-columns: 100% !important; } }
+/* Side by side, the photo fills the band's height, at least 420 px; the copy, not the photo's shape, sets that height. */
+@media (min-width: 782px) {
+  .band .wp-block-media-text__media { position: relative; min-height: 420px; }
+  .band .wp-block-media-text__media img { position: absolute; inset: 0; height: 100%; aspect-ratio: auto; }
+  .band .wp-block-media-text__content { padding: 3rem 3.5rem !important; }
+}
+
+/* ---------- Reviews ---------- */
+.reviews { text-align: center; padding-block: var(--wp--preset--spacing--60) !important; }
+.reviews > .big-score, .reviews > .stars-row { max-width: 760px; margin-inline: auto; }
+.big-score { font: 400 clamp(5rem, 14vw, 9rem)/1 var(--display); color: var(--brass-light); margin: 0; }
+.stars-row { color: var(--linen); font-size: 1.25rem; margin-top: 1rem !important; }
+.stars-row .stars { font-size: 2rem; color: var(--brass-light); letter-spacing: .08em; }
+.stars-row strong { font-weight: 700; }
+.review-note { color: var(--ash); font-size: .9375rem; text-align: left; margin: 0 0 2rem !important; max-width: 52ch; }
+.reviews .review-note { text-align: center; margin-inline: auto !important; }
+.review-grid { display: grid; gap: 20px; grid-template-columns: 1fr; margin-top: 1rem; text-align: left; }
+@media (min-width: 782px) { .review-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1100px) { .review-grid { grid-template-columns: repeat(3, 1fr); } }
+.review-card.wp-block-quote {
+  height: 100%; margin: 0; padding: 28px 26px 24px; border: 1px solid var(--smoke); border-top: 2px solid var(--brass); border-radius: 2px;
+  background: var(--hearth); display: flex; flex-direction: column; gap: 18px;
+}
+.review-card::before { content: "★★★★★"; color: var(--brass-light); font-size: 1.25rem; letter-spacing: .08em; line-height: 1; }
+.review-card p { margin: 0; font-size: 1.0625rem; line-height: 1.65; color: var(--linen); }
+.review-text { white-space: pre-wrap; }
+.review-card cite { margin-top: auto; display: flex; align-items: center; gap: 12px; font-style: normal; font-weight: 700; font-size: 1rem; color: var(--linen); }
+/* Initials on Google's own avatar colours, as Google shows a reviewer without a photo. */
+.review-avatar { flex: none; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font-size: 1.25rem; font-weight: 600; line-height: 1; color: #fff; }
+.review-avatar.tone-1 { background: #5c6bc0; }
+.review-avatar.tone-2 { background: #00796b; }
+.review-avatar.tone-3 { background: #bf360c; }
+.review-who { display: grid; gap: 2px; }
+.review-source { font-weight: 500; font-size: .9375rem; color: var(--ash); }
+.review-links { display: flex; flex-wrap: wrap; gap: 12px 20px; justify-content: center; align-items: center; margin-top: 2.5rem !important; }
+
+/* ---------- About / contact ---------- */
+.about { padding-block: var(--wp--preset--spacing--50) var(--wp--preset--spacing--60) !important; border-top: 1px solid var(--smoke); }
+.about h2 { margin-top: 0; }
+.about p { color: #d6cfc2; }
+.quote-section { display: grid; gap: 2rem; }
+.quote-section > * { margin-block: 0; min-width: 0; }
+.quote-section .quote-form { padding: 0; }
+/* On the home page the copy and the contact card split the row as the sampler's columns do. */
+@media (min-width: 782px) { .about .quote-section { grid-template-columns: calc(55% - 38.5px) calc(45% + 18.5px); gap: 20px; align-items: start; } }
+@media (min-width: 960px) { .quote-section { grid-template-columns: 1.3fr 1fr; gap: 3.5rem; align-items: start; } }
+.contact-panel { background: var(--hearth); border: 1px solid var(--smoke); padding: 1.75rem 1.5rem !important; }
+.contact-panel h3 { margin: 0; }
+.contact-panel a { overflow-wrap: anywhere; }
+.contact-lines { line-height: 2.1; }
+.contact-lines a { text-decoration: none; font-weight: 600; }
+/* The Contact page's "Follow us" line: each network is a named link with its glyph, 44 px tall. */
+.contact-social { display: flex; flex-wrap: wrap; align-items: center; column-gap: 1.25rem; margin: .5rem 0 0; }
+.contact-social-title { flex-basis: 100%; color: var(--ash); font-size: .9375rem; }
+.contact-social a { display: inline-flex; align-items: center; gap: .5rem; min-height: 44px; text-decoration: none; font-weight: 600; }
+.contact-social svg, .work-social svg { flex: none; width: 20px; height: 20px; }
+
+.intro { display: grid; gap: 2rem; align-items: center; }
+.intro > * { margin-block: 0; min-width: 0; }
+.intro p { color: #d6cfc2; max-width: 52ch; }
+.intro p:first-child { color: var(--linen); font-size: 1.25rem; line-height: 1.5; }
+.intro figure { margin: 0; }
+.intro img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 2px; display: block; }
+@media (min-width: 782px) { .intro { grid-template-columns: 1.2fr 1fr; gap: 4rem; align-items: start; } .intro-copy > :first-child { margin-top: 0; } .intro img { max-height: 620px; } }
+
+.ready { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+.ready li { padding: 1rem 0; border-top: 1px solid var(--smoke); color: #d6cfc2; }
+.ready li strong { color: var(--linen); }
+@media (min-width: 782px) { .ready { grid-template-columns: repeat(3, 1fr); column-gap: 2rem; } }
+
+.faq { max-width: 760px !important; }
+.faq details { border-top: 1px solid var(--smoke); }
+.faq details:last-child { border-bottom: 1px solid var(--smoke); }
+.faq summary { list-style: none; cursor: pointer; min-height: 44px; display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 1.1rem 0; font: 400 1.35rem/1.25 var(--display); color: var(--linen); }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font: 400 1.75rem/1 var(--body); color: var(--brass-light); }
+.faq details[open] summary::after { content: "\2212"; }
+@keyframes answer-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.faq details p { margin: 0 0 1.3rem; color: #d6cfc2; }
+
+.legal h2 { font-size: 2rem; margin: 2.5rem 0 .75rem; }
+.legal p, .legal li { color: #d6cfc2; }
+.legal ul { padding-left: 1.2rem; }
+
+/* ---------- Footer ---------- */
+.site-footer { background: var(--hearth); border-top: 1px solid var(--smoke); color: var(--ash); font-size: .9375rem; }
+.footer-inner { max-width: 1440px; margin-inline: auto; padding: 3rem max(16px, 4vw) 1.5rem; }
+.footer-grid { display: grid; gap: 20px; }
+@media (min-width: 600px) { .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px; } }
+@media (min-width: 960px) { .footer-grid { grid-template-columns: 1.3fr 1fr 1fr 1fr; } }
+.site-footer .footer-title { margin: 0 0 .25rem; font: 600 .9375rem/1.3 var(--body); color: var(--linen); }
+.footer-grid p { margin-bottom: 0; }
+.site-footer .site-logo img { width: 150px; }
+/* Each footer column is a list of links, one per line. */
+.footer-links .nav-links, .footer-list { display: flex; flex-direction: column; align-items: start; gap: 0; font-size: .9375rem; }
+:is(.footer-links .nav-links, .footer-list) a { display: flex; align-items: center; min-height: 44px; }
+.site-footer a { color: var(--ash); text-decoration: none; }
+/* The 44 px targets centre a 20 px glyph, so pull the row 12 px left to line the first glyph up with the text above. */
+.footer-social { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem; margin-inline-start: -12px; }
+.footer-social a { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; }
+.menu-toggle, .footer-social a { transition-property: color, transform; }
+.footer-social svg { width: 20px; height: 20px; }
+.footer-social a:hover, .footer-social a:focus-visible { color: var(--brass-light); }
+.footer-bottom { border-top: 1px solid var(--smoke); padding-top: 1.25rem; margin-bottom: 0; font-size: .8125rem; }
+.footer-bottom a { position: relative; color: var(--ash); }
+/* Footer contacts are 44 px tall; the privacy link keeps its line and gets a 44 px touch area. */
+.footer-grid p > a[href^="tel:"], .footer-grid p > a[href^="mailto:"] { display: inline-flex; align-items: center; min-height: 44px; }
+.footer-bottom a::after { content: ""; position: absolute; left: 0; right: 0; top: calc(50% - 22px); bottom: calc(50% - 22px); }
+
+/* ---------- Inner pages ---------- */
+.page-head { padding-block: 3rem 1.5rem !important; border-bottom: 1px solid var(--smoke); }
+.page-head h1 { font-size: clamp(2.75rem, 6vw, 4.5rem); margin: .5rem 0 0; }
+.page-head-inner > h1 { margin-top: .5rem; }
+.page-head-inner > .crumbs { margin-top: 0; }
+.crumbs { color: var(--ash); font-size: .9375rem; margin: 0; }
+.crumbs a { color: var(--ash); }
+.page-lede, .page-head-inner > .page-lede { color: #d6cfc2; max-width: 52ch; }
+.standalone { max-width: 760px; margin: auto; padding: 2rem max(16px, 4vw); }
+.small { font-size: .9375rem; color: var(--ash); margin: 0; }
+.regal-placeholder { outline: 1px dashed var(--brass-light); outline-offset: 2px; color: var(--ash); padding: 0 .2em; background: transparent; }
+
+/* ---------- Card states ---------- */
+.product-card, .project-card { transition: border-color var(--dur-2) var(--ease); }
+:is(.product-card, .project-card):is(:hover, :focus-visible, :focus-within) { border-color: rgba(201, 162, 78, .5); }
+.job-strip .wp-block-image img, .band .wp-block-media-text__media img, .product-media img, .project-media img { transition: transform var(--dur-3) var(--ease); }
+@media (hover: hover) and (pointer: fine) {
+  .wp-block-button__link:is(:hover, :focus-visible):not(:active) { transform: translateY(-1px); }
+  .action-bar .wp-block-button__link:is(:hover, :focus-visible):not(:active) { transform: none; }
+  .service-cols > .wp-block-column:has(a):hover::before { transform: scaleX(1); }
+  .footer-social a:is(:hover, :focus-visible) { transform: translateY(-2px); }
+  .job-strip > .wp-block-image:is(:hover, :focus-within) img, .band:is(:hover, :focus-within) .wp-block-media-text__media img, .product-card:is(:hover, :focus-visible, :focus-within) .product-media img, .project-card:is(:hover, :focus-visible, :focus-within) .project-media img { transform: scale(1.04); }
+}
+:is(.product-card, .project-card).reveal.is-in { transition: opacity var(--dur-3) var(--ease-out), transform var(--dur-3) var(--ease-out), border-color var(--dur-2) var(--ease); transition-delay: calc(var(--reveal-i, 0) * 70ms), calc(var(--reveal-i, 0) * 70ms), 0s; }
+:is(.product-card, .project-card).reveal:focus-within { transition: border-color var(--dur-2) var(--ease) !important; }
+
+/* ---------- Catalogue ---------- */
+.catalog-wrap { padding-bottom: 1rem !important; }
+.catalog-wrap > .catalog, .catalog-wrap > .price-note { max-width: 1320px; margin-inline: auto; }
+.filters { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; padding: 1.25rem 0 .5rem; border-top: 1px solid var(--smoke); }
+.filters > * { min-width: 0; }
+.filter-group { display: flex; flex-direction: column; gap: 8px; }
+.filter-label { font-size: .9375rem; color: var(--ash); }
+.filter-chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin: 0 calc(-1 * max(16px, 4vw)); padding: 2px max(16px, 4vw) 4px; }
+.filter-chips::-webkit-scrollbar { display: none; }
+.chip-label-compact { display: none; }
+.filter-head { position: relative; display: flex; flex-wrap: wrap; align-items: center; }
+.info-button { display: inline-grid; place-items: center; flex: none; width: 44px; height: 44px; margin: -12px -12px -12px -10px; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--ash); }
+.info-button { transition: color var(--dur-1) var(--ease), transform var(--dur-1) var(--ease); }
+.info-button:is(:hover, :focus-visible, [aria-expanded="true"]) { color: var(--brass-light); }
+.info-button:active { transform: scale(.92); }
+.js .info-panel:not([hidden]) { animation: answer-in var(--dur-2) var(--ease-out); }
+.info-panel { flex: 1 0 100%; margin: .25rem 0 0; max-width: 44ch; font-size: .9375rem; line-height: 1.5; color: var(--ash); }
+.filter-single { display: flex; align-items: center; min-height: 44px; margin: 0; font-size: .9375rem; color: var(--ash); }
+.faq details[open] > :not(summary) { animation: answer-in var(--dur-2) var(--ease-out); }
+/* A chip row with more chips past its right edge fades out there. */
+.filter-chips.more-right { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 48px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 48px), transparent); }
+.catalog-search { flex-direction: row; align-items: center; gap: 10px; }
+.search-input { width: 100%; max-width: 420px; min-height: 44px; padding: 8px 18px; border: 1px solid var(--edge); border-radius: 999px; background: var(--coal); color: var(--linen); font: 400 1rem/1.4 var(--body); }
+.search-input:focus { outline: none; border-color: var(--brass); box-shadow: 0 0 0 3px rgba(201, 162, 78, .2); }
+.filter-note { margin: 0; font-size: .875rem; color: var(--ash); }
+.spec-more summary { cursor: pointer; color: var(--brass-light); font-weight: 600; min-height: 44px; display: flex; align-items: center; }
+.empty-state .wp-block-button { justify-content: center; margin-block: 1rem .5rem; }
+.results-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; min-height: 48px; color: var(--ash); font-size: .9375rem; }
+.results-bar .result-count { margin-right: 6px; }
+.results-bar .clear-filters { margin-left: auto; }
+.result-tokens { display: contents; }
+.token { display: inline-flex; align-items: center; gap: 6px; flex: none; min-height: 44px; padding: 0 8px 0 14px; border: 1px solid var(--edge); border-radius: 999px; background: var(--hearth); color: var(--linen); font: 600 .875rem/1 var(--body); white-space: nowrap; cursor: pointer; }
+.token { transition: border-color var(--dur-1) var(--ease), opacity var(--dur-1) var(--ease), transform var(--dur-1) var(--ease); }
+.token:is(:hover, :focus-visible) { border-color: var(--ash); }
+.token:active { transform: scale(.96); }
+/* A removed token shrinks away before the filter changes. */
+.token.is-leaving { opacity: 0; transform: scale(.9); pointer-events: none; }
+@starting-style { .catalog[data-motion] .token { opacity: 0; transform: scale(.9); } }
+.token-x { display: inline-grid; place-items: center; width: 24px; height: 24px; color: var(--ash); font-size: 1rem; }
+.paging-status { margin: 0 0 .75rem; font-size: .9375rem; color: var(--ash); }
+.empty-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 1rem; }
+@media (max-width: 599.98px) {
+  .result-tokens { display: flex; order: 3; flex: 1 0 100%; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+  .result-tokens::-webkit-scrollbar { display: none; }
+  .result-tokens:empty { display: none; }
+}
+/* Phones: sticky bar and filter sheet. */
+.filter-bar { display: none; }
+.filters-button { flex: none; min-height: 44px; padding: 0 18px; border: 1px solid var(--linen); border-radius: 999px; background: var(--linen); color: var(--coal); font: 700 .9375rem/1.2 var(--body); white-space: nowrap; cursor: pointer; transition: transform var(--dur-1) var(--ease); }
+.filters-button:active { transform: scale(.96); }
+/* Where scripts run, the filters take the script's layout before it starts, so loading never moves the products: the venting note is closed, log size waits for Gas logs, and on phones the category row sits where the Filters bar will and a filtered page keeps room for its tokens. Without scripts everything stays inline and open. */
+@media (scripting: enabled) {
+  html:not(.js) .info-panel { display: none; }
+  html:not(.js) .filters:not(:has([data-filter="cat"] [data-value="gas-logs"][aria-checked="true"])) > [data-filter="size"] { display: none; }
+}
+@media (scripting: enabled) and (max-width: 599.98px) {
+  html:not(.js) .filters { padding-bottom: 0; }
+  html:not(.js) .filters > :is([data-filter="brand"], [data-filter="venting"], [data-filter="size"]) { display: none; }
+  html:not(.js) .filters > [data-filter="cat"] { margin: -16px calc(-1 * max(16px, 4vw)) 0; padding: 8px max(16px, 4vw); border-bottom: 1px solid var(--smoke); }
+  html:not(.js) .filters > [data-filter="cat"] .filter-head { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  html:not(.js) .filters > [data-filter="cat"] .filter-chips { margin: 0; padding: 2px 3px; }
+  html:not(.js) .results-bar[data-filtered] .result-tokens:empty { display: block; height: 44px; }
+}
+@media (max-width: 599.98px) {
+  .has-sheet .filters { padding-bottom: 0; }
+  .has-sheet .filter-bar { position: sticky; top: var(--hh); z-index: 40; display: flex; align-items: center; gap: 8px; margin-inline: calc(-1 * max(16px, 4vw)); padding: 8px max(16px, 4vw); background: var(--coal); border-bottom: 1px solid var(--smoke); }
+  .has-sheet .filter-bar::after { content: ""; position: absolute; inset: 100% 0 auto; height: 12px; background: linear-gradient(rgba(0, 0, 0, .45), transparent); opacity: 0; pointer-events: none; transition: opacity var(--dur-2) var(--ease); }
+  .has-sheet .filter-bar.is-stuck::after { opacity: 1; }
+  .filter-bar [data-filter="cat"] { flex: 1; min-width: 0; }
+  .filter-bar .filter-head { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .filter-bar .filter-chips { margin: 0; padding: 2px 3px; }
+  .has-sheet .results-bar { min-height: 44px; }
+  dialog.filter-sheet { position: fixed; inset: auto 0 0; width: 100%; max-width: 100%; max-height: min(88dvh, 100% - 24px); margin: 0; padding: 0; border: 0; border-top: 1px solid var(--smoke); border-radius: 2px 2px 0 0; background: var(--hearth); color: var(--linen); }
+  dialog.filter-sheet[open] { display: flex; flex-direction: column; }
+  dialog.filter-sheet::backdrop { background: rgba(0, 0, 0, .6); }
+  dialog.filter-sheet:modal[open], dialog.filter-sheet:modal::backdrop { transition: transform var(--dur-2) var(--ease-out), opacity var(--dur-2) var(--ease-out), display var(--dur-2) allow-discrete, overlay var(--dur-2) allow-discrete; }
+  @supports (transition-behavior: allow-discrete) {
+    dialog.filter-sheet:not([open]) { opacity: 0; transform: translateY(100%); transition: transform var(--dur-1) var(--ease), opacity var(--dur-1) var(--ease), display var(--dur-1) allow-discrete, overlay var(--dur-1) allow-discrete; }
+    dialog.filter-sheet:not([open])::backdrop { opacity: 0; transition: opacity var(--dur-1) var(--ease), display var(--dur-1) allow-discrete, overlay var(--dur-1) allow-discrete; }
+  }
+  @starting-style {
+    dialog.filter-sheet:modal[open] { opacity: 0; transform: translateY(100%); }
+    dialog.filter-sheet:modal[open]::backdrop { opacity: 0; }
+  }
+  .sheet-head { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 12px 8px 20px; border-bottom: 1px solid var(--smoke); }
+  .sheet-head h2 { margin: 0; font: 400 1.5rem/1.2 var(--display); }
+  .sheet-head h2:focus { outline: none; }
+  .sheet-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0 20px 8px; }
+  .sheet-category { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0; padding: 4px 0; border-bottom: 1px solid var(--smoke); font-size: .9375rem; color: var(--ash); }
+  .sheet-body .filter-group { padding: 14px 0; border-bottom: 1px solid var(--smoke); }
+  .sheet-body .filter-chips { flex-wrap: wrap; overflow: visible; margin: 0; padding: 2px 0; }
+  .sheet-foot { flex: none; padding: 12px 20px calc(12px + env(safe-area-inset-bottom)); border-top: 1px solid var(--smoke); background: var(--hearth); }
+  .sheet-foot .wp-block-button__link { width: 100%; }
+}
+@media (min-width: 600px) {
+  /* The panel opens over the grid under the label, so the products stay where they are. */
+  .js .info-panel { position: absolute; left: 0; top: calc(100% + 6px); z-index: 20; width: max-content; max-width: min(44ch, calc(100vw - 32px)); margin: 0; padding: .8rem 1rem; background: var(--hearth); border: 1px solid var(--smoke); border-radius: 2px; box-shadow: 0 12px 32px rgba(0, 0, 0, .5); }
+}
+.project-filters { border-top: 0; padding-top: 0; margin-bottom: 1.5rem; }
+@media (min-width: 960px) {
+  .filters { display: flex; flex-wrap: wrap; align-items: end; gap: 20px 40px; }
+  .filter-chips { margin: 0; padding: 2px 0 4px; flex-wrap: wrap; }
+  .catalogue-head { padding-block: 1rem .5rem !important; }
+  .catalogue-head .page-head-inner > h1 { margin-top: 0; }
+  .catalog-wrap > .catalog { margin-block-start: 0; }
+  .catalogue-head .page-head-inner > .page-lede { max-width: none; margin-block: .5rem 0; }
+  /* The catalogue's filters sit one row per filter, so its chips run denser. */
+  .catalog .filters { display: flex; flex-direction: column; align-items: stretch; gap: 16px; padding-block: .5rem 0; }
+  .catalog .results-bar { min-height: 44px; }
+  .catalog .filter-group { flex-direction: row; align-items: flex-start; gap: 10px; }
+  .catalog .filter-head, .catalog .catalog-search .filter-label { flex: 0 0 96px; min-height: 44px; }
+  .catalog .catalog-search .filter-label { display: flex; align-items: center; }
+  .catalog .filter-chips { flex: 1; gap: 8px 6px; padding-block: 0; overflow: visible; }
+  .catalog [data-filter="venting"] .filter-chips { flex: 0 1 auto; }
+  /* The log-size sentence sits under its chips, so the sizes keep one row. */
+  .catalog [data-filter="size"] { flex-wrap: wrap; row-gap: 2px; }
+  .catalog [data-filter="size"] .filter-note { flex: 1 0 100%; padding-left: 106px; }
+  .catalog .chip { padding-inline: 12px; }
+  .catalog .result-count { margin: 0; }
+  .chip-label-full { display: none; }
+  .chip-label-compact { display: inline; }
+}
+
+.product-grid { display: grid; gap: 14px; grid-template-columns: 1fr; }
+@media (min-width: 600px) { .product-grid { grid-template-columns: repeat(2, 1fr); gap: 18px; } }
+@media (min-width: 1100px) { .product-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; } }
+.catalog .catalog-paging { display: block; margin-top: 2rem; text-align: center; }
+.product-card { position: relative; border-radius: 2px; overflow: hidden; background: var(--hearth); border: 1px solid var(--smoke); display: flex; flex-direction: column; }
+.catalog[data-motion] .product-card:is(:not(.reveal), .is-settled) { transition: opacity var(--dur-2) var(--ease-out), transform var(--dur-2) var(--ease-out), border-color var(--dur-2) var(--ease); }
+@starting-style {
+  .catalog[data-motion] .product-card:is(:not(.reveal), .is-settled):not([hidden]) { opacity: 0; transform: translateY(var(--rise)); }
+}
+.product-card:focus { outline: 2px solid var(--brass-light); outline-offset: 3px; }
+.product-media { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: #000; }
+.product-media iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #000; }
+.product-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.product-media.contain img { object-fit: contain; padding: 6%; }
+.product-body { padding: 1.1rem 1.15rem 1.15rem; display: flex; flex-direction: column; gap: .45rem; flex: 1; }
+.product-title { font-size: 1.45rem; margin: 0; }
+.product-maker { margin: 0; min-height: 20px; display: flex; align-items: center; font-size: .8125rem; line-height: 1.3; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ash); }
+.product-maker .maker-logo { --logo-h: 20px; color: var(--linen); opacity: .88; margin-block: calc((20px - var(--logo-h) * var(--s, 1)) / 2); }
+.product-summary { margin: 0; font-size: .9375rem; line-height: 1.45; color: var(--ash); }
+/* From 600 px the maker is a plate over the photo's top-left, made like the play pill. */
+@media (min-width: 600px) {
+  .product-maker { position: absolute; top: 12px; left: 12px; z-index: 1; max-width: calc(100% - 24px); min-height: 36px; padding: 0 14px; border-radius: 999px; overflow: hidden; background: rgba(12, 11, 10, .72); border: 1px solid rgba(242, 237, 228, .25); color: var(--linen); font-size: .75rem; line-height: 1; white-space: nowrap; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+  .product-maker .maker-logo { --logo-h: 18px; max-width: 112px; opacity: 1; margin-block: 0; }
+  .product-card.is-playing .product-maker { visibility: hidden; }
+}
+.product-specs { margin: .5rem 0 0; padding-top: .8rem; border-top: 1px solid var(--smoke); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 14px; }
+.product-specs dt { margin-bottom: 4px; font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ash); }
+.product-specs dd { margin: 0; font-size: .9375rem; line-height: 1.35; color: var(--linen); }
+.product-actions { margin-top: auto; padding-top: .9rem; display: flex; flex-direction: column; gap: 4px; }
+.product-actions .wp-block-button__link { width: 100%; }
+/* Phones: the photo sits beside the brand, name and description; specs and buttons run full width below. */
+@media (max-width: 599px) {
+  .product-card { display: grid; grid-template-columns: 36% minmax(0, 1fr); grid-template-rows: auto auto 1fr; column-gap: 14px; padding-bottom: .5rem; }
+  .product-media { grid-row: 1 / 4; aspect-ratio: auto; height: 100%; min-height: 150px; }
+  .product-body { display: contents; }
+  .product-maker, .product-title, .product-summary { grid-column: 2; padding-right: 1rem; }
+  .product-maker { margin: 1rem 0 .35rem; }
+  .product-maker .maker-logo { --logo-h: 16px; }
+  .product-title { font-size: 1.3rem; margin-bottom: .35rem; }
+  .product-summary { padding-bottom: .9rem; font-size: .875rem; }
+  .product-card.is-playing .product-media { grid-column: 1 / -1; grid-row: 1; aspect-ratio: 16 / 9; height: auto; min-height: 0; }
+  .product-card.is-playing :is(.product-maker, .product-title, .product-summary) { grid-column: 1 / -1; padding-left: 1rem; }
+  .product-specs, .product-actions { grid-column: 1 / -1; margin-inline: 1rem; }
+  .product-specs { margin-top: 0; padding-top: .9rem; }
+  .specs-link { text-align: center; }
+}
+.safety-note { margin: 0; padding: .9rem 1.1rem; border-left: 3px solid var(--brass-light); background: var(--hearth); color: var(--linen); max-width: 75ch; }
+.not-found-links { display: flex; flex-wrap: wrap; gap: 0 1.5rem; padding: 0; list-style: none; }
+.not-found-links a { display: inline-flex; align-items: center; min-height: 44px; }
+.empty-state { text-align: center; padding: 3rem 1rem; border: 1px dashed var(--smoke); }
+.price-note { color: var(--ash); font-size: .9375rem; border-block: 1px solid var(--smoke); padding-block: 1.1rem; margin-top: 2.5rem !important; }
+.price-note strong { color: var(--linen); }
+
+/* ---------- Our work ---------- */
+.project-grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
+@media (min-width: 600px) { .project-grid { grid-template-columns: repeat(2, 1fr); gap: 18px; } }
+@media (min-width: 960px) { .project-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; } }
+.project-card { margin: 0; background: var(--hearth); border: 1px solid var(--smoke); border-radius: 2px; overflow: hidden; }
+.project-media { position: relative; overflow: hidden; aspect-ratio: 4 / 5; background: #000; }
+.project-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.project-media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #000; }
+/* The play button is a pill over the photo. */
+.watch { position: absolute; left: 12px; bottom: 12px; min-height: 36px; display: inline-flex; align-items: center; gap: 6px; padding: 0 14px; border-radius: 999px; background: rgba(12, 11, 10, .72); border: 1px solid rgba(242, 237, 228, .45); color: var(--linen); font-size: .875rem; font-weight: 600; cursor: pointer; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.watch::after { content: ""; position: absolute; left: 0; right: 0; top: calc(50% - 22px); bottom: calc(50% - 22px); }
+.video-fallback { position: absolute; bottom: 1rem; left: 1rem; padding: .5rem; background: var(--coal); }
+.project-description { display: none; margin: 0; padding: 1rem; position: absolute; inset: auto 0 0; background: linear-gradient(transparent, rgba(12, 11, 10, .95)); color: var(--linen); }
+.project-caption { padding: 1rem 1.1rem 1.2rem; }
+.project-card .cap { font: 400 1.25rem/1.25 var(--display); color: var(--linen); margin: 0 0 .35rem; }
+.project-card .meta { font-size: .9375rem; color: var(--ash); margin: 0; }
+@media (min-width: 960px) {
+  .project-description { display: block; opacity: 0; pointer-events: none; transform: translateY(8px); transition: opacity var(--dur-2) var(--ease), transform var(--dur-2) var(--ease); }
+  .project-card:focus-within .project-description { opacity: 1; transform: none; }
+}
+@media (min-width: 960px) and (hover: hover) and (pointer: fine) {
+  .project-card:hover .project-description { opacity: 1; transform: none; }
+}
+@media (max-width: 599px) {
+  .project-grid.dense { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .project-grid.dense .project-caption { padding: .6rem .7rem .8rem; }
+  .project-grid.dense .cap { font-size: 1rem; }
+  .project-grid.dense .meta { font-size: .8125rem; }
+  .project-grid.dense .watch, .product-card .watch { left: 8px; bottom: 8px; min-height: 30px; padding: 0 10px; font-size: .8125rem; }
+}
+
+/* ---------- Quote form and dialog ---------- */
+dialog.quote {
+  width: min(540px, calc(100vw - 24px)); max-height: calc(100dvh - 24px); padding: 0;
+  background: var(--hearth); color: var(--linen); border: 1px solid rgba(201, 162, 78, .35); border-radius: 4px;
+}
+dialog.quote::backdrop { background: rgba(0, 0, 0, .72); }
+dialog:is(.mobile-menu, .quote):modal[open], dialog.quote:modal::backdrop { transition: opacity var(--dur-2) var(--ease-out), display var(--dur-1) allow-discrete, overlay var(--dur-1) allow-discrete; }
+/* Fast menu surface; staggered items. */
+dialog.mobile-menu:modal[open] { transition-duration: var(--dur-1); }
+dialog.quote:modal[open] > *, dialog.mobile-menu:modal[open] > :is(.nav-links, .close-button) { animation: dialog-content-in var(--dur-2) var(--ease-out); }
+@keyframes dialog-content-in { from { transform: translateY(calc(var(--rise) / 2)); } to { transform: none; } }
+@supports (transition-behavior: allow-discrete) {
+  dialog:is(.mobile-menu, .quote):not([open]), dialog.quote:not([open])::backdrop { opacity: 0; transition: opacity var(--dur-1) var(--ease), display var(--dur-1) allow-discrete, overlay var(--dur-1) allow-discrete; }
+}
+@starting-style {
+  dialog:is(.mobile-menu, .quote):modal[open], dialog.quote:modal[open]::backdrop { opacity: 0; }
+}
+.quote-head { display: flex; justify-content: space-between; gap: 12px; padding: 1.4rem 1.4rem .25rem; }
+.quote-head h2 { font-size: 2rem; margin: 0; }
+.quote-form, .quote-thanks { padding: 1rem 1.4rem 1.5rem; display: grid; gap: 14px; }
+.quote-form .wp-block-button__link { width: 100%; }
+.field { display: grid; gap: 6px; }
+.field label { font-weight: 600; font-size: .9375rem; }
+.field label span { font-weight: 400; color: var(--ash); }
+.field input, .field select, .field textarea {
+  width: 100%; min-height: 48px; padding: 10px 12px; border: 1px solid var(--edge); border-radius: 2px;
+  background: var(--coal); color: var(--linen); font: 400 1rem/1.4 var(--body);
+}
+.field textarea { min-height: 84px; resize: vertical; }
+.field input::placeholder, .field textarea::placeholder, .search-input::placeholder { color: #8a8276; }
+.field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--brass); box-shadow: 0 0 0 3px rgba(201, 162, 78, .2); }
+.field [aria-invalid=true] { border-color: var(--brass-light); }
+.field-product input { border-color: var(--brass); color: var(--brass-light); font-weight: 700; }
+.field-error, .form-status { color: var(--linen); border-left: 2px solid var(--brass-light); padding-left: .65rem; font-size: .9375rem; }
+.field-error:empty, .form-status:empty { display: none; }
+.form-hint { margin: 0 0 -.4rem; font-size: .9375rem; color: var(--ash); }
+.honey { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.two-col { display: grid; gap: 14px; }
+@media (min-width: 520px) { .two-col { grid-template-columns: 1fr 1fr; } }
+.quote-thanks { text-align: center; justify-items: center; padding-top: 1.5rem; }
+.thanks-title { font-size: 2rem; margin: 0; }
+.thanks-detail { color: #d6cfc2; margin: 0; max-width: 38ch; }
+
+/* ---------- Entrance reveals ---------- */
+.reveal { opacity: 0; transform: translateY(var(--rise)); }
+.reveal.is-in { opacity: 1; transform: none; transition: opacity var(--dur-3) var(--ease-out), transform var(--dur-3) var(--ease-out); transition-delay: calc(var(--reveal-i, 0) * 70ms); }
+.reveal:focus-within { opacity: 1; transform: none; transition: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; }
+  .wp-block-button__link, .chip, .token, .filters-button, .info-button, dialog.filter-sheet, .close-button, .menu-toggle, .product-media img, .project-media img, .project-description, .job-strip img, .band .wp-block-media-text__media img, .footer-social a { transform: none !important; }
+}
+@media print { .reveal { opacity: 1; transform: none; transition: none; } }
+
+/* ---------- Page transitions ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+  .site-header { view-transition-name: site-header; }
+  /* Snapshots need literal 200ms and --ease. */
+  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: 200ms; animation-timing-function: cubic-bezier(.2, .7, .2, 1); }
+  ::view-transition-old(root) { animation-name: page-out; }
+  ::view-transition-new(root) { animation-name: page-in; }
+  @keyframes page-out { to { opacity: 0; } }
+  @keyframes page-in { from { opacity: 0; } }
+  ::view-transition-group(root), ::view-transition-group(site-header) { animation: none; }
+  ::view-transition-old(site-header) { animation: none; opacity: 0; }
+  ::view-transition-new(site-header) { animation: none; }
+}
