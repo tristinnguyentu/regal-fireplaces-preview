@@ -78,6 +78,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .section, .band-wrap, .page-head, .catalog-wrap, .work { padding-inline: max(16px, 4vw, (100% - 1320px) / 2); }
 .section { padding-top: var(--wp--preset--spacing--60); padding-bottom: var(--wp--preset--spacing--50); }
 .section h2 { margin: 0 0 1.5rem; }
+/* A service page's sections sit one L space apart (72 px at 1366, 40 px on phones), not XL above and L below. */
+.service-page .section { padding-top: var(--wp--preset--spacing--50); padding-bottom: 0; }
+.service-page .section:last-child { padding-bottom: var(--wp--preset--spacing--50); }
 .section .section-lede { color: #d6cfc2; max-width: 80ch; text-wrap: pretty; margin: -.75rem 0 1.75rem; }
 .reading { max-width: 80ch !important; }
 
@@ -286,7 +289,7 @@ dialog.mobile-menu:modal[open] :is(.nav-links > *, .lang-switch, .wp-block-butto
 
 /* ---------- Home: hero ---------- */
 .home-cover { margin: 0 !important; }
-.hero { padding-top: calc(var(--hh) + 40px) !important; padding-bottom: 176px !important; min-height: 78vh !important; }
+.hero { padding-top: calc(var(--hh) + 40px) !important; padding-bottom: 168px !important; min-height: 78vh !important; }
 .hero::after { content: ""; position: absolute; inset: auto 0 0; height: 45%; background: linear-gradient(transparent, var(--coal)); pointer-events: none; }
 .hero.wp-block-cover { padding-left: max(16px, 4vw); padding-right: max(16px, 4vw); }
 .hero .wp-block-cover__inner-container { z-index: 2; max-width: 1320px; margin-inline: auto; }
@@ -306,7 +309,7 @@ a.hero-rating { text-decoration: none; }
 .hero-rating .rating-text > span:nth-child(2) { transition: color var(--dur-1) var(--ease); }
 a.hero-rating:is(:hover, :focus-visible) .rating-text > span:nth-child(2) { color: var(--brass-light); }
 @media (min-width: 960px) {
-  .hero { min-height: min(88vh, 820px) !important; padding-bottom: 234px !important; }
+  .hero { min-height: min(88vh, 820px) !important; padding-bottom: 226px !important; }
   .hero-rating { column-gap: 22px; }
   .hero-rating .score { font-size: 4.5rem; }
   .hero-rating .rating-text { padding-left: 22px; font-size: 1.375rem; }
@@ -378,8 +381,10 @@ a.hero-rating:is(:hover, :focus-visible) .rating-text > span:nth-child(2) { colo
 }
 
 /* ---------- Services ---------- */
-/* Each service page ends with the other four, one row of links with 44 px targets. */
-.other-services-list { display: flex; flex-wrap: wrap; gap: 0 28px; margin: 0; padding: 0; list-style: none; }
+/* Each service page ends with the other four, a compact row of links with 44 px targets under a small label. */
+.service-page .section.other-services { margin-top: var(--wp--preset--spacing--40); padding-top: 1.5rem; border-top: 1px solid var(--smoke); }
+.other-services h2 { margin: 0 0 .25rem; font: 600 .9375rem/1.4 var(--body); letter-spacing: .02em; color: var(--ash); }
+.other-services-list { display: flex; flex-wrap: wrap; gap: 0 24px; margin: 0; padding: 0; list-style: none; }
 .other-services-list a { display: inline-flex; align-items: center; min-height: 44px; }
 .services { padding-block: var(--wp--preset--spacing--60) var(--wp--preset--spacing--50) !important; }
 .service-cols { gap: 0 !important; margin-top: 2.5rem !important; }
@@ -398,6 +403,14 @@ a.hero-rating:is(:hover, :focus-visible) .rating-text > span:nth-child(2) { colo
 }
 .steps .num { display: block; font: 400 2rem/1 var(--display); color: var(--brass-light); margin-bottom: .6rem; }
 .steps h3 { margin-top: 0; }
+/* On phones the four steps are compact: the number sits beside its title and each step takes a few lines. */
+@media (max-width: 781px) {
+  .service-cols.steps { margin-top: 1rem !important; }
+  .steps > .wp-block-column { padding: .85rem 0 1rem; }
+  .steps h3 { display: flex; align-items: baseline; gap: .6rem; font-size: 1.3rem; }
+  .steps .num { display: inline; font-size: 1.5rem; margin: 0; }
+  .steps p { margin-top: .35rem; font-size: .9375rem; }
+}
 
 /* ---------- Band (media & text) ----------
    The photo's share of the width is set on each band (grid-template-columns), as the WordPress block does. */
@@ -413,6 +426,16 @@ a.hero-rating:is(:hover, :focus-visible) .rating-text > span:nth-child(2) { colo
   .band .wp-block-media-text__media { position: relative; min-height: 420px; }
   .band .wp-block-media-text__media img { position: absolute; inset: 0; height: 100%; aspect-ratio: auto; }
   .band .wp-block-media-text__content { padding: 3rem 3.5rem !important; }
+}
+/* The band that ends a service page is shorter: a 2:1 photo on phones, at least 280 px beside the copy, smaller type. */
+.band.compact .wp-block-media-text__media img { aspect-ratio: 2 / 1; }
+.band.compact .wp-block-media-text__content { padding: 1.5rem 1.25rem 1.75rem !important; }
+.band.compact h2 { font-size: clamp(1.625rem, 2.6vw, 2.125rem); }
+.band.compact p { margin-block: .6rem 1.1rem; }
+@media (min-width: 782px) {
+  .band.compact .wp-block-media-text__media { min-height: 280px; }
+  .band.compact .wp-block-media-text__media img { aspect-ratio: auto; }
+  .band.compact .wp-block-media-text__content { padding: 2rem 2.75rem !important; }
 }
 
 /* ---------- Reviews ---------- */
@@ -442,6 +465,15 @@ a.hero-rating:is(:hover, :focus-visible) .rating-text > span:nth-child(2) { colo
 .review-avatar.tone-3 { background: #bf360c; }
 .review-who { display: grid; gap: 2px; }
 .review-source { font-weight: 500; font-size: .9375rem; color: var(--ash); }
+/* A service page's review: the heading and the rating line, then one card; side by side from 960 px. */
+.review-summary { display: grid; gap: 1.25rem; }
+.review-summary h2 { margin-bottom: .75rem; }
+.rating-line { margin: 0; color: var(--linen); font-size: 1.0625rem; line-height: 1.6; }
+.rating-line .stars { color: var(--brass-light); letter-spacing: .08em; margin-right: .35rem; }
+.rating-line a { white-space: nowrap; }
+.review-summary .review-note { margin-bottom: .75rem !important; }
+.review-summary .review-grid { grid-template-columns: 1fr; margin-top: 0; }
+@media (min-width: 960px) { .review-summary { grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: 3.5rem; align-items: start; } }
 .review-links { display: flex; flex-wrap: wrap; gap: 12px 20px; justify-content: center; align-items: center; margin-top: 2.5rem !important; }
 
 /* ---------- About / contact ---------- */
@@ -472,11 +504,34 @@ a.hero-rating:is(:hover, :focus-visible) .rating-text > span:nth-child(2) { colo
 .intro figure { margin: 0; }
 .intro img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 2px; display: block; }
 @media (min-width: 782px) { .intro { grid-template-columns: 1.2fr 1fr; gap: 4rem; align-items: start; } .intro-copy > :first-child { margin-top: 0; } .intro img { max-height: 620px; } }
+/* A service page's photo is landscape: 3:2 on phones, 4:3 beside the copy, never taller than 420 px. */
+/* A service page's intro photo is 3:2 above the text below 960 px. From 960 px it sits beside the text and takes the text's
+   height, 280 to 420 px, cropped on its focal point, so no empty space opens under a short intro. */
+.service-intro img { aspect-ratio: 3 / 2; max-height: 420px; }
+@media (min-width: 782px) and (max-width: 959px) { .service-intro { grid-template-columns: 1fr; gap: 2rem; } }
+@media (min-width: 960px) {
+  .service-intro { grid-template-columns: 3fr 2fr; align-items: stretch; }
+  .service-intro figure { position: relative; min-height: 280px; max-height: 420px; }
+  .service-intro img { position: absolute; inset: 0; height: 100%; max-height: none; aspect-ratio: auto; }
+}
 
-.ready { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
-.ready li { padding: 1rem 0; border-top: 1px solid var(--smoke); color: #d6cfc2; }
+/* A service page's quote column lists what to send, as a short checklist between the lede and the form. */
+.quote-ready { margin: 0 0 1.75rem; padding: 1.1rem 1.25rem 1.2rem; background: var(--hearth); border: 1px solid var(--smoke); border-radius: 2px; }
+.quote-ready h3 { margin: 0 0 .6rem; font: 600 1rem/1.4 var(--body); letter-spacing: 0; color: var(--linen); }
+.ready { display: grid; gap: .5rem; margin: 0; padding: 0; list-style: none; }
+.ready li { position: relative; padding-left: 1.6rem; font-size: .9375rem; line-height: 1.5; color: #d6cfc2; }
+.ready li::before { content: "✓"; position: absolute; left: 0; top: 0; color: var(--brass-light); font-weight: 700; }
 .ready li strong { color: var(--linen); }
-@media (min-width: 782px) { .ready { grid-template-columns: repeat(3, 1fr); column-gap: 2rem; } }
+/* From 960 px the heading and lede run across, the form sits at left, and the contact panel and the checklist stack
+   beside it: the quote column is a subgrid spanning both columns. */
+@media (min-width: 960px) {
+  .quote-section.with-ready { grid-template-columns: 1.3fr 1fr; grid-template-rows: auto auto auto 1fr; column-gap: 3.5rem; row-gap: 0; }
+  .quote-section.with-ready > .quote-column { grid-column: 1 / -1; grid-row: 1 / span 4; display: grid; grid-template-columns: subgrid; grid-template-rows: subgrid; }
+  .quote-section.with-ready > .quote-column > :is(h2, .section-lede) { grid-column: 1 / -1; }
+  .quote-section.with-ready > .quote-column > #quote-inline { grid-column: 1; grid-row: 3 / span 2; }
+  .quote-section.with-ready > .quote-column > .quote-ready { grid-column: 2; grid-row: 4; align-self: start; margin: 1.25rem 0 0; }
+  .quote-section.with-ready > .contact-column { grid-column: 2; grid-row: 3; align-self: start; }
+}
 
 .faq { max-width: 760px !important; }
 .faq details { border-top: 1px solid var(--smoke); }
@@ -640,6 +695,8 @@ a.hero-rating:is(:hover, :focus-visible) .rating-text > span:nth-child(2) { colo
   .sheet-foot .wp-block-button__link { width: 100%; }
 }
 @media (min-width: 600px) {
+  /* The results bar sits apart from the filter rows, so its tokens never read as one more row of choices. */
+  .results-bar { margin-top: 1rem; }
   /* The panel opens over the grid under the label, so the products stay where they are. */
   .js .info-panel { position: absolute; left: 0; top: calc(100% + 6px); z-index: 20; width: max-content; max-width: min(44ch, calc(100vw - 32px)); margin: 0; padding: .8rem 1rem; background: var(--hearth); border: 1px solid var(--smoke); border-radius: 2px; box-shadow: 0 12px 32px rgba(0, 0, 0, .5); }
 }
@@ -648,13 +705,13 @@ a.hero-rating:is(:hover, :focus-visible) .rating-text > span:nth-child(2) { colo
   .chip, .token { min-height: 36px; }
   .filters { display: flex; flex-wrap: wrap; align-items: end; gap: 20px 40px; }
   .filter-chips { margin: 0; padding: 2px 0 4px; flex-wrap: wrap; }
-  .catalogue-head { padding-block: 1rem .5rem !important; }
+  .catalogue-head { padding-block: .75rem .5rem !important; }
   .catalogue-head .page-head-inner > h1 { margin-top: 0; }
   .catalog-wrap > .catalog { margin-block-start: 0; }
   .catalogue-head .page-head-inner > .page-lede { max-width: none; margin-block: .5rem 0; }
   /* The catalogue's filters sit one row per filter, so its chips run denser. */
   .catalog .filters { display: flex; flex-direction: column; align-items: stretch; gap: 16px; padding-block: .5rem 0; }
-  .catalog .results-bar { min-height: 44px; margin-block: .75rem 1rem; }
+  .catalog .results-bar { min-height: 44px; margin-block: 1.5rem .75rem; }
   .catalog .filter-group { flex-direction: row; align-items: flex-start; gap: 10px; }
   .catalog .filter-head { flex: 0 0 96px; min-height: 36px; }
   .catalog .catalog-search .filter-label { flex: 0 0 96px; min-height: 44px; }
@@ -736,6 +793,11 @@ a.hero-rating:is(:hover, :focus-visible) .rating-text > span:nth-child(2) { colo
 .watch::after { content: ""; position: absolute; left: 0; right: 0; top: calc(50% - 22px); bottom: calc(50% - 22px); }
 .video-fallback { position: absolute; bottom: 1rem; left: 1rem; padding: .5rem; background: var(--coal); }
 .project-caption { margin: 0; padding: .85rem 1.1rem .95rem; font-size: .9375rem; line-height: 1.35; color: var(--linen); }
+@media (max-width: 959px) { .project-grid.related > .project-card:nth-child(n+3) { display: none; } }
+/* Beside each other on a computer, a service page's three jobs crop to 4:3, framed on each photo's focal point. */
+@media (min-width: 960px) { .project-grid.related .project-media { aspect-ratio: 4 / 3; } }
+.jobs-more { margin: 1rem 0 0; }
+.jobs-more a { display: inline-flex; align-items: center; min-height: 44px; }
 @media (max-width: 599px) {
   .project-grid.dense { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .project-grid.dense .project-caption { padding: .6rem .7rem .7rem; font-size: .8125rem; }
