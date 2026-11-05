@@ -54,10 +54,14 @@
   const menu = document.getElementById('mobile-menu');
   const menuToggle = document.querySelector('.menu-toggle');
   if (menu && menuToggle) {
-    menuToggle.addEventListener('click', () => { menu.showModal(); menuToggle.setAttribute('aria-expanded', 'true'); });
+    menuToggle.addEventListener('click', () => { delete menu.dataset.instant; menu.showModal(); menuToggle.setAttribute('aria-expanded', 'true'); });
     menu.querySelector('.menu-close').addEventListener('click', () => menu.close());
     menu.addEventListener('close', () => { menuToggle.setAttribute('aria-expanded', 'false'); menuToggle.focus(); });
-    menu.addEventListener('click', (event) => { if (event.target.closest('a')) menu.close(); });
+    // A page link closes the menu without its fade, and so does leaving the page, before the page transition captures it.
+    // The call link leaves the menu open behind the dialler.
+    const closeNow = () => { menu.dataset.instant = ''; if (menu.open) menu.close(); };
+    menu.addEventListener('click', (event) => { if (event.target.closest('a:not([href^="tel:"])')) closeNow(); });
+    window.addEventListener('pageswap', closeNow);
   }
   const dialog = document.getElementById('quote');
   let opener;
@@ -209,6 +213,49 @@
   };
   // Matches regal_search_text(): lower case without accents.
   const fold = (value) => value.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/\s+/g, ' ').trim();
+  // Our Work: the service chips are links that reload the page with ?service=; with scripts they filter the cards in
+  // place and keep the address in step, the way the catalogue's chips do.
+  document.querySelectorAll('.project-filters').forEach((filters) => {
+    const scope = filters.parentElement;
+    const chips = [...filters.querySelectorAll('.chip[data-service]')];
+    const grid = scope.querySelector('.project-grid');
+    const cards = [...scope.querySelectorAll('.project-card[data-service]')];
+    const empty = scope.querySelector('.project-empty');
+    const status = document.createElement('p');
+    status.className = 'screen-reader-text';
+    status.setAttribute('role', 'status');
+    filters.after(status);
+    const labelOf = (service) => chips.find((chip) => chip.dataset.service === service)?.textContent.trim() || '';
+    // A service with no chip here is ignored, as the server ignores it.
+    const read = () => {
+      const service = new URL(location.href).searchParams.get('service') || '';
+      return chips.some((chip) => chip.dataset.service === service) ? service : '';
+    };
+    const apply = (service, announce = false) => {
+      chips.forEach((chip) => { if (chip.dataset.service === service) chip.setAttribute('aria-current', 'true'); else chip.removeAttribute('aria-current'); });
+      let shown = 0;
+      cards.forEach((card) => { card.hidden = Boolean(service) && card.dataset.service !== service; if (!card.hidden) shown += 1; });
+      if (grid) grid.hidden = shown === 0;
+      if (empty) {
+        empty.hidden = shown > 0;
+        empty.querySelector('.empty-message').textContent = text(`${labelOf(service)}: no jobs in the gallery yet.`, `${labelOf(service)}: todavía no hay trabajos en la galería.`);
+      }
+      if (announce) status.textContent = text(`${shown} ${shown === 1 ? 'project' : 'projects'}`, `${shown} ${shown === 1 ? 'trabajo' : 'trabajos'}`);
+    };
+    scope.addEventListener('click', (event) => {
+      const link = event.target.closest('a[data-service]');
+      // A modified click still opens the link, in a new tab or window.
+      if (!link || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      event.preventDefault();
+      const service = link.dataset.service;
+      apply(service, true);
+      const url = new URL(location.href);
+      if (service) url.searchParams.set('service', service); else url.searchParams.delete('service');
+      history.replaceState(history.state, '', url);
+      if (link.classList.contains('show-all')) chips.find((chip) => !chip.dataset.service)?.focus();
+    });
+    apply(read());
+  });
   document.querySelectorAll('.catalog').forEach((catalog) => {
     const cards = [...catalog.querySelectorAll('.product-card')];
     const groups = [...catalog.querySelectorAll('[data-filter]')];
