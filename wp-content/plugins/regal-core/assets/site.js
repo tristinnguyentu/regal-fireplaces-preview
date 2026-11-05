@@ -44,10 +44,12 @@
   document.querySelectorAll('.services-menu').forEach((details) => {
     details.querySelector('summary').setAttribute('aria-expanded', String(details.open));
     details.addEventListener('toggle', () => details.querySelector('summary').setAttribute('aria-expanded', String(details.open)));
+    // In the header Services is a panel: Escape, a click or keyboard focus outside it closes it. In the phone menu its
+    // pages stay open under it until Services is pressed again, and Escape closes the whole menu.
+    if (!details.closest('.desktop-nav')) return;
     details.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') { details.open = false; details.querySelector('summary').focus(); }
     });
-    // A click or keyboard focus outside the panel closes it.
     document.addEventListener('click', (event) => { if (details.open && !details.contains(event.target)) details.open = false; });
     details.addEventListener('focusout', (event) => { if (event.relatedTarget && !details.contains(event.relatedTarget)) details.open = false; });
   });

@@ -205,7 +205,7 @@ img.maker-logo { width: auto; object-fit: contain; object-position: left center;
 @keyframes submenu-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
 .services-menu { position: relative; }
 .services-menu summary { cursor: pointer; list-style: none; }
-/* Services opens a panel, so in the header it carries a caret, which turns while the panel is open. */
+/* Services opens and closes, so it carries a caret, which turns while its pages show. */
 .services-menu summary .caret { flex: none; margin-left: 6px; transition: transform var(--dur-2) var(--ease); }
 .services-menu[open] summary .caret { transform: rotate(180deg); }
 .services-menu summary::-webkit-details-marker { display: none; }
@@ -252,8 +252,13 @@ img.maker-logo { width: auto; object-fit: contain; object-position: left center;
 .mobile-menu[open] { position: fixed; inset: 0; width: 100%; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 20px max(16px, 4vw); }
 .mobile-menu .close-button { float: right; }
 .mobile-menu .nav-links { display: flex; flex-direction: column; align-items: stretch; gap: 14px; padding-top: 64px; font: 400 2rem/1.2 var(--display); }
-.mobile-menu .submenu { position: static; display: grid; border: 0; padding: 0 0 0 1rem; font: 400 17px/1.6 var(--body); color: var(--ash); }
-.mobile-menu .submenu a { white-space: normal; padding-left: 0; }
+/* Services' pages sit in the menu itself, indented 1.25rem under it in DM Serif 1.35rem (the FAQ question step), on the
+   menu's own coal, and mark the current page as the other links do. Services' caret is 20 px and turns while they show;
+   once open, the underline moves from Services to the page itself. */
+.mobile-menu .services-menu summary .caret { width: 20px; height: 20px; margin-left: 12px; }
+.mobile-menu .services-menu[open] > summary { text-decoration: none; }
+.mobile-menu .submenu { position: static; display: grid; width: auto; max-width: none; margin-top: 2px; padding: 0 0 0 1.25rem; border: 0; background: none; font: 400 1.35rem/1.2 var(--display); color: #d6cfc2; }
+.mobile-menu .submenu a { white-space: normal; padding: 0; }
 .mobile-menu .lang-switch { margin-block: 1.5rem; }
 /* The quote and call buttons stand apart from the links, about three link gaps below the last one, in a row that wraps
    on narrow phones; the menu covers the header's call icon and the bottom bar, so it carries the number itself. */
@@ -504,15 +509,16 @@ a.hero-rating:is(:hover, :focus-visible) .rating-text > span:nth-child(2) { colo
 .intro figure { margin: 0; }
 .intro img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 2px; display: block; }
 @media (min-width: 782px) { .intro { grid-template-columns: 1.2fr 1fr; gap: 4rem; align-items: start; } .intro-copy > :first-child { margin-top: 0; } .intro img { max-height: 620px; } }
-/* A service page's photo is landscape: 3:2 on phones, 4:3 beside the copy, never taller than 420 px. */
-/* A service page's intro photo is 3:2 above the text below 960 px. From 960 px it sits beside the text and takes the text's
-   height, 280 to 420 px, cropped on its focal point, so no empty space opens under a short intro. */
+/* A service page's intro is one lead paragraph and a landscape photo. The photo is 3:2 under the text below 960 px, at most
+   420 px tall; from 960 px the text and the photo each take half the width, tops level, and the photo is 4:3. Repair's gas
+   warning opens the text column, so the column and the photo still start level. */
 .service-intro img { aspect-ratio: 3 / 2; max-height: 420px; }
+.service-intro .safety-note { margin: 0 0 1.5rem; color: var(--linen); }
+.service-intro .safety-note + p { margin-top: 0; color: var(--linen); font-size: 1.25rem; line-height: 1.5; }
 @media (min-width: 782px) and (max-width: 959px) { .service-intro { grid-template-columns: 1fr; gap: 2rem; } }
 @media (min-width: 960px) {
-  .service-intro { grid-template-columns: 3fr 2fr; align-items: stretch; }
-  .service-intro figure { position: relative; min-height: 280px; max-height: 420px; }
-  .service-intro img { position: absolute; inset: 0; height: 100%; max-height: none; aspect-ratio: auto; }
+  .service-intro { grid-template-columns: 1fr 1fr; align-items: start; }
+  .service-intro img { aspect-ratio: 4 / 3; max-height: none; }
 }
 
 /* A service page's quote column lists what to send, as a short checklist between the lede and the form. */
