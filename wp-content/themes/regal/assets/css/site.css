@@ -611,6 +611,7 @@ a.hero-rating:is(:hover, :focus-visible) .rating-text > span:nth-child(2) { colo
 .filters > * { min-width: 0; }
 .filter-group { display: flex; flex-direction: column; gap: 8px; }
 .filter-label { font-size: .9375rem; color: var(--ash); }
+.type-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .filter-chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin: 0 calc(-1 * max(16px, 4vw)); padding: 2px max(16px, 4vw) 4px; }
 .filter-chips::-webkit-scrollbar { display: none; }
 .chip-label-compact { display: none; }

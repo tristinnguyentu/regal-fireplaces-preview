@@ -40,6 +40,7 @@
     const link_location = link.dataset.location || link.closest('[data-location]')?.dataset.location || 'content';
     if (link.protocol === 'tel:') emit('call_click', { link_location });
     if (link.protocol === 'mailto:') emit('email_click', { link_location });
+    if (link.hostname === 'wa.me') emit('whatsapp_click', { link_location });
   });
   document.querySelectorAll('.services-menu').forEach((details) => {
     details.querySelector('summary').setAttribute('aria-expanded', String(details.open));
