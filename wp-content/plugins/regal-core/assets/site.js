@@ -430,6 +430,7 @@
       bar.className = 'filter-bar';
       opener = document.createElement('button');
       opener.type = 'button'; opener.className = 'filters-button'; opener.setAttribute('aria-haspopup', 'dialog');
+      opener.innerHTML = '<svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg><span class="filters-label"></span>';
       bar.append(opener);
       filters.after(bar);
       const stick = () => { if (catalog.classList.contains('has-sheet')) bar.classList.toggle('is-stuck', scrollY > 0 && bar.getBoundingClientRect().top <= parseFloat(getComputedStyle(bar).top) + 1); };
@@ -455,7 +456,7 @@
     const syncSheet = () => {
       if (!sheet) return;
       const chosenInSheet = multi.reduce((sum, key) => sum + chosen[key].length, 0);
-      opener.textContent = chosenInSheet ? text(`Filters (${chosenInSheet})`, `Filtros (${chosenInSheet})`) : text('Filters', 'Filtros');
+      opener.querySelector('.filters-label').textContent = chosenInSheet ? text(`Filters (${chosenInSheet})`, `Filtros (${chosenInSheet})`) : text('Filters', 'Filtros');
       sheet.querySelector('.sheet-category span').textContent = text('Category: ', 'Categoría: ') + (chosen.cat ? labelOf(chipFor('cat', chosen.cat)) : text('All categories', 'Todas las categorías'));
       sheet.querySelector('.sheet-status').textContent = text(`${total} products`, `${total} productos`);
       sheet.querySelector('.sheet-done').textContent = text(`Show ${total} products`, `Ver ${total} productos`);

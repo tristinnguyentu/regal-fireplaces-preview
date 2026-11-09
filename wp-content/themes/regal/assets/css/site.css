@@ -654,8 +654,9 @@ a.hero-rating:is(:hover, :focus-visible) .rating-text > span:nth-child(2) { colo
 }
 /* Phones: sticky bar and filter sheet. */
 .filter-bar { display: none; }
-.filters-button { flex: none; min-height: 44px; padding: 0 18px; border: 1px solid var(--linen); border-radius: 999px; background: var(--linen); color: var(--coal); font: 700 .9375rem/1.2 var(--body); white-space: nowrap; cursor: pointer; transition: transform var(--dur-1) var(--ease); }
+.filters-button { display: inline-flex; align-items: center; gap: 8px; flex: none; min-height: 44px; padding: 0 18px; border: 1px solid var(--linen); border-radius: 999px; background: var(--linen); color: var(--coal); font: 700 .9375rem/1.2 var(--body); white-space: nowrap; cursor: pointer; transition: transform var(--dur-1) var(--ease); }
 .filters-button:active { transform: scale(.96); }
+.filters-button svg { flex: none; }
 /* Where scripts run, the filters take the script's layout before it starts, so loading never moves the products: the venting note is closed, log size waits for Gas logs, and on phones the category row sits where the Filters bar will and a filtered page keeps room for its tokens. Without scripts everything stays inline and open. */
 @media (scripting: enabled) {
   html:not(.js) .info-panel { display: none; }
