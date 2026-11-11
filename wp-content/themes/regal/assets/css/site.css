@@ -509,6 +509,9 @@ a.hero-rating:is(:hover, :focus-visible) .rating-text > span:nth-child(2) { colo
 .intro figure { margin: 0; }
 .intro img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 2px; display: block; }
 @media (min-width: 782px) { .intro { grid-template-columns: 1.2fr 1fr; gap: 4rem; align-items: start; } .intro-copy > :first-child { margin-top: 0; } .intro img { max-height: 620px; } }
+/* About's story opens with the owner's name as a large heading and his role under it. */
+.owner-head h2 { margin: 0; font-size: clamp(2.75rem, 5.2vw, 4rem); }
+.owner-head .owner-role { margin: .6rem 0 1.5rem; color: var(--ash); font-size: 1.0625rem; }
 /* A service page's intro is one lead paragraph and a landscape photo. The photo is 3:2 under the text below 960 px, at most
    420 px tall; from 960 px the text and the photo each take half the width, tops level, and the photo is 4:3. Repair's gas
    warning opens the text column, so the column and the photo still start level. */
