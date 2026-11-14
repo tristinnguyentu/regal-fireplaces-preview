@@ -141,7 +141,7 @@ img.maker-logo { width: auto; object-fit: contain; object-position: left center;
 @starting-style { .catalog[data-motion] .chip:not([hidden]) { opacity: 0; } }
 
 /* ---------- Tag: venting on product cards ---------- */
-.tag { display: inline-block; font-size: .8125rem; font-weight: 700; letter-spacing: .04em; padding: 2px 9px; border: 1px solid transparent; border-radius: 999px; }
+.tag { display: inline-block; white-space: nowrap; font-size: .8125rem; font-weight: 700; letter-spacing: .04em; padding: 2px 9px; border: 1px solid transparent; border-radius: 999px; }
 .tag-vented { background: var(--smoke); border-color: var(--smoke); color: var(--linen); }
 .tag-ventfree { border-color: rgba(224, 191, 114, .6); color: var(--brass-light); }
 
@@ -742,7 +742,7 @@ a.hero-rating:is(:hover, :focus-visible) .rating-text > span:nth-child(2) { colo
 @media (min-width: 600px) { .product-grid { grid-template-columns: repeat(2, 1fr); gap: 18px; } }
 @media (min-width: 1100px) { .product-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; } }
 .catalog .catalog-paging { display: block; margin-top: 2rem; text-align: center; }
-.product-card { position: relative; border-radius: 2px; overflow: hidden; background: var(--hearth); border: 1px solid var(--smoke); display: flex; flex-direction: column; }
+.product-card { container: product-card / inline-size; position: relative; border-radius: 2px; overflow: hidden; background: var(--hearth); border: 1px solid var(--smoke); display: flex; flex-direction: column; }
 .catalog[data-motion] .product-card:is(:not(.reveal), .is-settled) { transition: opacity var(--dur-2) var(--ease-out), transform var(--dur-2) var(--ease-out), border-color var(--dur-2) var(--ease); }
 @starting-style {
   .catalog[data-motion] .product-card:is(:not(.reveal), .is-settled):not([hidden]) { opacity: 0; transform: translateY(var(--rise)); }
@@ -766,6 +766,10 @@ a.hero-rating:is(:hover, :focus-visible) .rating-text > span:nth-child(2) { colo
 .product-specs { margin: .5rem 0 0; padding-top: .8rem; border-top: 1px solid var(--smoke); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 14px; }
 .product-specs dt { margin-bottom: 4px; font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ash); }
 .product-specs dd { margin: 0; font-size: .9375rem; line-height: 1.35; color: var(--linen); }
+/* The venting tag stays on one line. A long label ("Chimney required" 134 px, "No requiere ventilación" 170 px) needs
+   a 170 px column, which a card narrower than 400 px cannot give, so there it takes the whole first row; a short one
+   ("Vented", "Direct vent") keeps its half. */
+@container product-card (max-width: 399px) { .product-specs > .spec-wide { grid-column: 1 / -1; } }
 .product-actions { margin-top: auto; padding-top: .9rem; display: flex; flex-direction: column; gap: 4px; }
 .product-actions .wp-block-button__link { width: 100%; }
 /* Phones: the photo sits beside the brand, name and description; specs and buttons run full width below. */
