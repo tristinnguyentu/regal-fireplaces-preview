@@ -496,6 +496,15 @@ a.hero-rating:is(:hover, :focus-visible) .rating-text > span:nth-child(2) { colo
 .contact-panel a { overflow-wrap: anywhere; }
 .contact-lines { line-height: 2.1; }
 .contact-lines a { text-decoration: none; font-weight: 600; }
+/* About ends on the contact card as one wide panel: from 960 px its heading and button sit on the left and the
+   contact lines, at their own width so none wraps, on the right, both centred on the row. Narrower, it stacks as the
+   card does everywhere else. */
+@media (min-width: 960px) {
+  .closing-panel .contact-panel { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 3.5rem; align-items: center; padding: 2.75rem 3rem !important; }
+  .closing-panel .contact-panel > h3 { grid-column: 1; grid-row: 1; align-self: end; font-size: clamp(1.75rem, 3vw, 2.5rem); }
+  .closing-panel .contact-panel > .wp-block-buttons { grid-column: 1; grid-row: 2; align-self: start; margin-top: 1.5rem; }
+  .closing-panel .contact-panel > .contact-lines { grid-column: 2; grid-row: 1 / span 2; margin: 0; }
+}
 /* The Contact page's "Follow us" line: each network is a named link with its glyph, 44 px tall. */
 .contact-social { display: flex; flex-wrap: wrap; align-items: center; column-gap: 1.25rem; margin: .5rem 0 0; }
 .contact-social-title { flex-basis: 100%; color: var(--ash); font-size: .9375rem; }
