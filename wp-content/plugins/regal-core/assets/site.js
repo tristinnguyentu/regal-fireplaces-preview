@@ -390,7 +390,8 @@
         }
         group.hidden = key === 'size' ? chosen.cat !== 'gas-logs' : ![...group.querySelectorAll('button[data-value]')].some((button) => !button.hidden);
       });
-      catalog.querySelector('.result-count').textContent = filtered ? text(`${total} of ${cards.length} products`, `${total} de ${cards.length} productos`) : text(`${total} products`, `${total} productos`);
+      // With anything chosen the count says how many match, so it never reads as a page of a longer list.
+      catalog.querySelector('.result-count').textContent = filtered ? (total === 1 ? text('1 product matches your filters', '1 producto coincide con sus filtros') : text(`${total} products match your filters`, `${total} productos coinciden con sus filtros`)) : text(`${total} products`, `${total} productos`);
       renderTokens();
       const empty = catalog.querySelector('.empty-state');
       empty.hidden = total !== 0;
